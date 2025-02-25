@@ -1,4 +1,5 @@
 using e_store_be.Data;
+using e_store_be.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,10 +12,12 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 });
 
 builder.Services.AddCors();
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 var app = builder.Build();
 
 //http pipeline
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(opt =>
 {
     opt.AllowAnyMethod().AllowAnyHeader().WithOrigins("https://localhost:3000");
